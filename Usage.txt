@@ -1,0 +1,5 @@
+-python3 pass-strength.py 
+
+Example usage:
+
+-The script will prompt you to enter a password to check its strength. The application will display the strength of the password and provide feedback for improvement.
