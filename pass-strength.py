@@ -1,6 +1,10 @@
+import kivy
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.label import Label
+from kivy.uix.textinput import TextInput
+from kivy.uix.button import Button
 import re
-import tkinter as tk
-from tkinter import messagebox
 
 def password_strength(password):
     # Criteria definitions
@@ -40,32 +44,55 @@ def password_strength(password):
 
     return strength, feedback
 
-def check_password():
-    password = password_entry.get()
-    strength, feedback = password_strength(password)
+class PasswordStrengthApp(App):
+    def build(self):
+        self.window = BoxLayout(orientation='vertical')
+        
+        self.label = Label(
+            text="Enter a password to check its strength:",
+            font_size=18,
+            halign="center",
+            valign="middle"
+        )
+        self.window.add_widget(self.label)
+        
+        self.password_input = TextInput(
+            multiline=False,
+            password=True,
+            font_size=24,
+            halign="center"
+        )
+        self.window.add_widget(self.password_input)
+        
+        self.button = Button(
+            text="Check Strength",
+            size_hint=(1, 0.5),
+            font_size=18,
+            on_press=self.check_password_strength
+        )
+        self.window.add_widget(self.button)
+        
+        self.result_label = Label(
+            text="",
+            font_size=18,
+            halign="center",
+            valign="middle"
+        )
+        self.window.add_widget(self.result_label)
+        
+        return self.window
 
-    result_text = f"Password Strength: {strength}\n"
-    if feedback:
-        result_text += "Feedback to improve your password:\n"
-        for suggestion in feedback:
-            result_text += f"- {suggestion}\n"
-    else:
-        result_text += "Your password is very strong!"
+    def check_password_strength(self, instance):
+        password = self.password_input.text
+        strength, feedback = password_strength(password)
+        
+        self.result_label.text = f"Password Strength: {strength}"
+        if feedback:
+            self.result_label.text += "\nFeedback to improve your password:"
+            for suggestion in feedback:
+                self.result_label.text += f"\n- {suggestion}"
+        else:
+            self.result_label.text += "\nYour password is very strong!"
 
-    messagebox.showinfo("Password Strength Result", result_text)
-
-# Create the main window
-root = tk.Tk()
-root.title("Password Strength Checker")
-
-# Create and place the password entry widget
-tk.Label(root, text="Enter a password to check its strength:").pack(pady=10)
-password_entry = tk.Entry(root, show="*", width=40)
-password_entry.pack(pady=10)
-
-# Create and place the check button
-check_button = tk.Button(root, text="Check Password", command=check_password)
-check_button.pack(pady=20)
-
-# Start the GUI event loop
-root.mainloop()
+if __name__ == "__main__":
+    PasswordStrengthApp().run()
