@@ -1,0 +1,5 @@
+**Clone the repository:**
+
+git clone https://github.com/4BH1L4SH/PRODIGY_CS_03.git
+
+cd PRODIGY_CS_03
