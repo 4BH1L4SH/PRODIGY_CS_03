@@ -4,6 +4,7 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.textinput import TextInput
 from kivy.uix.button import Button
+from kivy.uix.checkbox import CheckBox
 import re
 
 def password_strength(password):
@@ -46,7 +47,7 @@ def password_strength(password):
 
 class PasswordStrengthApp(App):
     def build(self):
-        self.window = BoxLayout(orientation='vertical')
+        self.window = BoxLayout(orientation='vertical', padding=10, spacing=10)
         
         self.label = Label(
             text="Enter a password to check its strength:",
@@ -63,6 +64,19 @@ class PasswordStrengthApp(App):
             halign="center"
         )
         self.window.add_widget(self.password_input)
+        
+        self.show_password_checkbox = CheckBox()
+        self.show_password_checkbox.bind(active=self.toggle_password_visibility)
+        self.show_password_label = Label(
+            text="Show Password",
+            font_size=18
+        )
+        
+        checkbox_layout = BoxLayout(orientation='horizontal', size_hint_y=None, height=30)
+        checkbox_layout.add_widget(self.show_password_checkbox)
+        checkbox_layout.add_widget(self.show_password_label)
+        
+        self.window.add_widget(checkbox_layout)
         
         self.button = Button(
             text="Check Strength",
@@ -81,6 +95,12 @@ class PasswordStrengthApp(App):
         self.window.add_widget(self.result_label)
         
         return self.window
+
+    def toggle_password_visibility(self, checkbox, value):
+        if value:
+            self.password_input.password = False
+        else:
+            self.password_input.password = True
 
     def check_password_strength(self, instance):
         password = self.password_input.text
